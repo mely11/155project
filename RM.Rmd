@@ -1,6 +1,7 @@
 ---
-title: "R Markdown"
+title: "Project"
 output: html_document
+author: Yiyi Yuan
 ---
 
 ```{r setup, include=FALSE}
@@ -10,8 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(broom)
-library(tidyverse)
+library(ggplot2)
 library(ggridges) 
+library(readr) 
+library(skimr) 
+olympic <- read_csv("Users/y.y/Desktop/STAT155/my_test_repo/120-years-of-olympic-history-athletes-and-results/athlete_events.csv")
 ```
 
 ## R Markdown
