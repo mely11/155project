@@ -1,0 +1,35 @@
+---
+title: "Github for collaboration"
+output: 
+html_document:
+  keep_md:yes
+---
+
+```{r}
+library(readr)
+library(broom)
+library(ggplot2)
+library(openintro) #NEW - install this first!
+library(GGally) #NEW- install this first!
+library(tidyverse) 
+library(ggmosaic)
+
+```
+
+```{r}
+atheletes <- read.csv("athlete_events.csv")
+```
+
+We can see from the graph that bronze, gold and silver medal winners, along with other participants without medals all have relatively similar ages as the bars overlap in their heights and the median are all kept around 25. The IQR for all three medals are all relatively same. Thus there is no huge impact of age to the medal level. Competitors without medal has a higher range of age (about 100) than medal winners. Gold medal winners have the smallest range of age. All three medal winners' and other participants' ages are pretty right skewed.
+
+```{r}
+ggplot(data = atheletes , aes(y = Age, x = Medal)) + geom_boxplot() 
+```
+
+
+We can see from the graph that males olympic competitors have higher age median, but both males and females have relatively similar ages as their boxes overlap. What's more interesting in this graph is that males tend to have higher age range (about 100) than women (about 75). Both ages for are right skewed.
+
+
+```{r}
+ggplot(data = atheletes , aes(y = Age, x = Sex)) + geom_boxplot() 
+```

@@ -1,0 +1,76 @@
+---
+title: "Wine Review Dataset Analysis"
+author: "yiyi yuan, xuechen yu, carrie shao"
+date: "11/13/2019"
+output: html_document
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(broom)
+library(GGally)
+library(tidyverse)
+library(ggridges) 
+wine <- read.csv("wine-reviews/winemag-data_first150k.csv", header = TRUE, sep = ",")
+names(wine)
+summary(wine)
+glimpse(wine)
+```
+
+
+## Wine Overview
+
+This is an R Markdown document, in which we have analyzed the Wine Reviews Dataset from Kaggle. 
+
+see <https://www.kaggle.com/zynicide/wine-reviews>, a CSV version of the data scraped.
+
+Our main goals are to visualize and analyze Wine Review Dataset using a multiple of visualising tools taught in class. 
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+wine %>% 
+  filter(!is.na(country)) %>% 
+  count(country) %>% 
+  mutate(Country = factor(country)) %>% 
+  top_n(11) %>% 
+  ggplot(aes(Country, n)) +
+  geom_col() +  
+  coord_flip() +
+  theme_minimal()
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+wine %>% 
+  top_n(200) %>% 
+  ggplot() +
+  geom_boxplot(aes(x = country, y = price)) +
+  theme_minimal()
+
+wine %>% 
+  top_n(1100) %>% 
+  ggplot() +
+  geom_boxplot(aes(x = country, y = price, fill = country)) 
+```
+
+Italy, Turkey and Slovenia wines, on average, the most expensive wine.
+
+## Wines Production of Countries
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+wines_of_countries <- wine["country"]
+barplot(table(wines_of_countries),
+        main = "Wines Production of Countries",
+        xlab = "Countries",
+        ylab = "Production",
+        border = "black",
+        col = "pink",
+        axes = TRUE,
+        density = 21, 
+        cex.axis = .6, 
+        cex.names = .6,
+        las = 2) +
+  theme_minimal()
+```
+Above graph tells us the countries that a variety of wines are from and their production.
+
+Obviously, US and France produced most of the wines (US 42% and France 17%  and other 42 countries 41%, derived from summary(wine) above). 
