@@ -1,0 +1,138 @@
+---
+title: "Github for collaboration"
+output: 
+html_document:
+  keep_md:yes
+  
+---
+
+```{r}
+library(readr)
+library(broom)
+library(ggplot2)
+library(openintro) #NEW - install this first!
+library(GGally) #NEW- install this first!
+library(tidyverse) 
+library(ggmosaic)
+library(moderndive)
+
+
+```
+
+`
+
+
+```{r}
+athletes <- read.csv("/Users/carrieshao/Downloads/athletes/athlete_events.csv")
+```
+
+1.graphs
+
+The graph shows the relationship between age and medal categories for olympic competitors. We can see from the graph that bronze, gold and silver medal winners, along with other participants without medals all have relatively similar ages as the bars overlap in their heights and the median are all kept around 25. The IQR for all three medals are all relatively same. Thus there is no huge impact of age to the medal level. Competitors without medal has a higher range of age (about 100) than medal winners. Gold medal winners have the smallest range of age.  All three medal winners' and other participants' ages are pretty right skewed. It's interesting to see that there are quite a lot of people over 75 participating in olympic, even though they didn't win medals. Those won the medals are all under 75 years old. 
+
+
+```{r}
+ggplot(data = athletes , aes(y = Age, x = Medal)) + geom_boxplot() 
+
+```
+
+```{r}
+ggplot(data = athletes , aes(y = Age, x = Sex)) + geom_boxplot() 
+```
+
+The graph shows the relationship between sex and age for olympic competitors. We can see from the graph that males olympic competitors have higher age median, but both males and females have relatively similar ages as their boxes overlap. What's more interesting in this graph is that males tend to have higher age range (about 100) than women (about 75). Both ages for are right skewed.
+
+
+4. future work
+The future work that we think we would like to do is to explore our dataset both in breadth and in depth. We want to examine more graphs and models that involve a variety of variables, each may show relationships between two or more variables and explain completely different things. At the same time, we want to come up with a single topic of what may affect the number of medals won by a single entity (country, person, etc.). From here we will examine more variables that explain the effect and result. We will make more models, graphs to explore the relationship and come up with decent explnations for the result. 
+
+2 & 3. models and their inferences
+```{r}
+Lm.weight <- lm(Weight ~ Age,data = athletes)
+tidy(Lm.weight)
+```
+
+
+```{r}
+set.seed(543)
+
+Weight_Age <-
+  athletes %>% 
+  rep_sample_n(size = 300, replace = FALSE, reps = 300) %>% 
+  group_by(replicate) %>% 
+  mutate(new_Weight = sample(Weight)) %>% 
+  do(lm(new_Weight ~ Age, data=.) %>% tidy()) 
+```
+
+```{r}
+Weight_Age %>%
+  ggplot(aes(x = estimate)) +
+  geom_histogram(bins = 30) +
+  geom_vline(xintercept = 0.5546711, color = "red")
+```
+
+```{r}
+Lm.Height <- lm(Height ~ Age,data = athletes)
+tidy(Lm.Height)
+```
+
+```{r}
+set.seed(543)
+
+Height_Age <-
+  athletes %>% 
+  rep_sample_n(size = 300, replace = FALSE, reps = 300) %>% 
+  group_by(replicate) %>% 
+  mutate(new_Height = sample(Height)) %>% 
+  do(lm(new_Height ~ Age, data=.) %>% tidy()) 
+```
+
+```{r}
+Height_Age %>%
+  ggplot(aes(x = estimate)) +
+  geom_histogram(bins = 30) +
+  geom_vline(xintercept = 0.5546711, color = "red")
+```
+
+```{r}
+Lm.HW <- lm(Height ~ Weight, data = athletes)
+tidy(Lm.HW)
+```
+
+```{r}
+set.seed(543)
+
+Weight_Height <-
+  athletes %>% 
+  rep_sample_n(size = 300, replace = FALSE, reps = 300) %>% 
+  group_by(replicate) %>% 
+  mutate(new_Height = sample(Height)) %>% 
+  do(lm(Height ~ Weight, data=.) %>% tidy()) 
+```
+ 
+```{r}
+Weight_Height %>%
+  ggplot(aes(x = estimate)) +
+  geom_histogram(bins = 30) +
+  geom_vline(xintercept = 0.5546711, color = "red")
+```
+
+
+
+
+ 
+
+
+
+```{r}
+medal_age <- lm(Age ~ Sex, 
+                   data= athletes)
+get_regression_table(medal_age)
+```
+
+
+We want to find the relationship be age and sex of the athletes who won the medal, since there are many stereotypes around the relationship between these two variables (such as male athletes usually have older ages, etc.). The intercept means that when the sex is female, the age for the athletes will be about 24 on average. SexM means that holding other variables to be constant, male athletes will have about 2.5 years on average older than female athletes who won the medal. This shows that in general, male athletes who won the medal do have older ages than female atheletes who won the medal, but the difference is not that significant. Also, it tells us that despite some outliers, the average ages for both male and female winners are about 24-26 years old. 
+
+
+
+
