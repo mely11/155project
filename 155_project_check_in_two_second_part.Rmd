@@ -1,0 +1,88 @@
+---
+title: "155 project"
+author: "Xuechen"
+date: "06/12/2019"
+output: html_document
+---
+```{r}
+library(readr)
+library(faraway)
+library(tidyverse)
+library(broom)
+library(infer)
+athlete <- read_csv("athlete_events.csv")
+```
+
+ Research Question: 
+ relationship between weight and sport
+ quantitive variable: weight
+ categorial: sport
+ 
+```{r}
+Lm.weight <- lm(Weight ~ Age,data = athlete)
+tidy(Lm.weight)
+```
+
+```{r}
+set.seed(543)
+
+Weight_Age <-
+  athlete %>% 
+  rep_sample_n(size = 300, replace = FALSE, reps = 300) %>% 
+  group_by(replicate) %>% 
+  mutate(new_Weight = sample(Weight)) %>% 
+  do(lm(new_Weight ~ Age, data=.) %>% tidy()) 
+```
+
+```{r}
+Weight_Age %>%
+  ggplot(aes(x = estimate)) +
+  geom_histogram(bins = 30) +
+  geom_vline(xintercept = 0.5546711, color = "red")
+```
+
+```{r}
+Lm.Height <- lm(Height ~ Age,data = athlete)
+tidy(Lm.Height)
+```
+
+```{r}
+set.seed(543)
+
+Height_Age <-
+  athlete %>% 
+  rep_sample_n(size = 300, replace = FALSE, reps = 300) %>% 
+  group_by(replicate) %>% 
+  mutate(new_Height = sample(Height)) %>% 
+  do(lm(new_Height ~ Age, data=.) %>% tidy()) 
+```
+
+```{r}
+Height_Age %>%
+  ggplot(aes(x = estimate)) +
+  geom_histogram(bins = 30) +
+  geom_vline(xintercept = 0.5546711, color = "red")
+```
+
+```{r}
+Lm.HW <- lm(Height ~ Weight, data = athlete)
+tidy(Lm.HW)
+```
+
+```{r}
+set.seed(543)
+
+Weight_Height <-
+  athlete %>% 
+  rep_sample_n(size = 300, replace = FALSE, reps = 300) %>% 
+  group_by(replicate) %>% 
+  mutate(new_Height = sample(Height)) %>% 
+  do(lm(Height ~ Weighßt, data=.) %>% tidy()) 
+```
+ 
+```{r}
+Weight_Height %>%
+  ggplot(aes(x = estimate)) +
+  geom_histogram(bins = 30) +
+  geom_vline(xintercept = 0.5546711, color = "red")
+```
